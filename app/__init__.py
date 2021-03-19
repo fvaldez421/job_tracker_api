@@ -3,7 +3,7 @@ import os
 from flask import Flask, request
 # from flask_mongoengine import MongoEngine
 
-from database.db import initialize_db
+from app.database.db import initialize_db
 
 
 def create_app(test_config=None):
