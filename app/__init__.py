@@ -4,7 +4,7 @@ from flask import Flask, request
 # from flask_mongoengine import MongoEngine
 
 from app.database.db import initialize_db
-
+from app.routes.jobs import jobs_bp
 
 def create_app(test_config=None):
     # create and configure the app
@@ -19,7 +19,7 @@ def create_app(test_config=None):
         app.config.from_mapping(test_config)
     
     initialize_db(app)
-
+    app.register_blueprint(bp)
     # a simple page that says hello
     @app.route('/')
     def noPath():
