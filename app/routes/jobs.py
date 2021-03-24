@@ -12,7 +12,8 @@ def index():
             "test_entities": TestEntity.objects
         }
     if request.method == 'POST':
-        test_entity = TestEntity(name='my first test', description='some description here')
+        print(request.json)
+        test_entity = TestEntity(name=request.json['formValue'], description='some description here')
         test_entity.save()
         print(test_entity)
         return {
