@@ -1,6 +1,14 @@
+import datetime
 from .db import db
 
-class TestEntity(db.Document):
-  name = db.StringField()
-  description = db.StringField()
 
+class User(db.Document):
+    name = db.StringField()
+    email = db.EmailField()
+    creation_date = db.DateTimeField()
+    modified_date = db.DateTimeField(default=datetime.datetime.now)
+    def save(self, *args, **kwargs):
+        if not self.creation_date:
+            self.creation_date = datetime.datetime.now()
+        self.modified_date = datetime.datetime.now()
+        return super(User, self).save(*args, **kwargs)

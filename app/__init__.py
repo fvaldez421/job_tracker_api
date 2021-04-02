@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 from flask import Flask, request
 # from flask_mongoengine import MongoEngine
 from app.database.db import initialize_db
+from app.routes.users import users_bp
 from app.routes.jobs import jobs_bp
 
 # this will generate a path to this file (<os abs path>/job_tracker_api/app), we use replace to get the project root
@@ -25,6 +26,7 @@ def create_app():
     initialize_db(app)
     
     # register app routes
+    app.register_blueprint(users_bp)
     app.register_blueprint(jobs_bp)
 
     # a simple page that says hello
