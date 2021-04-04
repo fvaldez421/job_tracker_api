@@ -1,7 +1,6 @@
 from app.database.models import Vendor
 
 
-
 class VendorController:
     @staticmethod
     def get_all_vendors():
