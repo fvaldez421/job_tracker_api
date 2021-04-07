@@ -29,6 +29,7 @@ def create_app():
     # register app routes
     app.register_blueprint(users_bp)
     app.register_blueprint(jobs_bp)
+    app.register_blueprint(vendors_bp)
 
     # a simple page that says hello
     @app.route('/')
