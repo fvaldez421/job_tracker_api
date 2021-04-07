@@ -16,10 +16,12 @@ class VendorController:
     def create_vendor(vendor_data = None):
         vendor = None
         if 'name' in vendor_data:
-            vendor = Vendor(
-                name = vendor_data['name'],
-            )
-            vendor = vendor.save()
+            existing_vendor = Vendor.objects(name=vendor_data['name'])
+            if not existing_vendor:
+                vendor = Vendor(
+                    name = vendor_data['name'],
+                )
+                vendor = vendor.save()
         return vendor
 
     @staticmethod
