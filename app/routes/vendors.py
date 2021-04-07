@@ -1,9 +1,9 @@
-rom flask import Blueprint, request
+from flask import Blueprint, request
 
 from app.database.models import Vendor
 from app.controllers.vendor_controller import VendorController
 
-vendors_bp = Blueprint('vendors', __vendor__)
+vendors_bp = Blueprint('vendors', __name__)
 
 
 @vendors_bp.route('/vendors', methods=['GET', 'POST', 'DELETE'])
@@ -15,7 +15,7 @@ def index():
 
     if request.method == 'POST':
         req_body = request.json
-        vendor = VendorrController.create_vendor(req_body)
+        vendor = VendorController.create_vendor(req_body)
         return {
             "vendor": vendor,
             "success": vendor != None

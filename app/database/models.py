@@ -13,8 +13,8 @@ class User(db.Document):
         self.modified_date = datetime.datetime.now()
         return super(User, self).save(*args, **kwargs)
 
-class Vendor(db.Document)
-    vendor = db.StringField()
+class Vendor(db.Document):
+    name = db.StringField()
     creation_date = db.DateTimeField()
     modified_date = db.DateTimeField(default=datetime.datetime.now)
     def save(self, *args, **kwargs):

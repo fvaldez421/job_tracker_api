@@ -4,7 +4,7 @@ from app.database.models import Vendor
 class VendorController:
     @staticmethod
     def get_all_vendors():
-        return Vendors.objects
+        return Vendor.objects
 
     @staticmethod
     def get_single_vendor(vendor_id=None):
@@ -15,9 +15,9 @@ class VendorController:
     @staticmethod
     def create_vendor(vendor_data = None):
         vendor = None
-        if 'vendor' in vendor_data:
+        if 'name' in vendor_data:
             vendor = Vendor(
-                vendor = vendor_data['vendor'],
+                name = vendor_data['name'],
             )
             vendor = vendor.save()
         return vendor
@@ -30,7 +30,7 @@ class VendorController:
         if vendor_id != None or updates != None:
             vendor = VendorController.get_single_vendor(vendor_id=vendor_id)
             if vendor != None:
-                if 'vendor' in updates: vendor.name = updates['vendor']
+                if 'name' in updates: vendor.name = updates['name']
                 vendor.save()
                 success = True
         return success
@@ -49,4 +49,4 @@ class VendorController:
 
     @staticmethod
     def delete_all_vendors():
-        User.drop_collection()
+        Vendor.drop_collection()
