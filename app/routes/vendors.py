@@ -9,8 +9,14 @@ vendors_bp = Blueprint('vendors', __name__)
 @vendors_bp.route('/vendors', methods=['GET', 'POST', 'DELETE'])
 def index():
     if request.method == 'GET':
+        text_query = request.args.get('q', None)
+        vendors = None
+        if text_query != None:
+            vendors = VendorController.find_by_name(text_query)
+        else:
+            vendors = VendorController.get_all_vendors()
         return {
-            "vendors": VendorController.get_all_vendors()
+            "vendors": vendors
         }
 
     if request.method == 'POST':
