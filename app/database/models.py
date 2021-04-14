@@ -12,3 +12,13 @@ class User(db.Document):
             self.creation_date = datetime.datetime.now()
         self.modified_date = datetime.datetime.now()
         return super(User, self).save(*args, **kwargs)
+
+class Vendor(db.Document):
+    name = db.StringField()
+    creation_date = db.DateTimeField()
+    modified_date = db.DateTimeField(default=datetime.datetime.now)
+    def save(self, *args, **kwargs):
+        if not self.creation_date:
+            self.creation_date = datetime.datetime.now()
+        self.modified_date = datetime.datetime.now()
+        return super(Vendor, self).save(*args, **kwargs)

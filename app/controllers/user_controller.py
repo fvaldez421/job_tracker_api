@@ -10,7 +10,6 @@ class UserController:
     @staticmethod
     def get_single_user(user_id=None):
         user = User.objects.get(pk=user_id)
-        print(user)
         return user
 
     @staticmethod
@@ -18,8 +17,8 @@ class UserController:
         user = None
         if 'name' in user_data and 'email' in user_data:
             user = User(
-                name = user_data['name'],
-                email = user_data['email']
+                name = user_data['name'].strip(),
+                email = user_data['email'].strip()
             )
             user = user.save()
         return user
@@ -28,12 +27,11 @@ class UserController:
     def update_user(user_id = None, updates = None):
         user = None
         success = False
-        print(user_id, updates)
         if user_id != None or updates != None:
             user = UserController.get_single_user(user_id=user_id)
             if user != None:
-                if 'name' in updates: user.name = updates['name']
-                if 'email' in updates: user.email = updates['email']
+                if 'name' in updates: user.name = updates['name'].strip()
+                if 'email' in updates: user.email = updates['email'].strip()
                 user.save()
                 success = True
         return success
@@ -42,7 +40,6 @@ class UserController:
     def delete_user(user_id = None):
         user = None
         success = False
-        print(user_id)
         if user_id != None:
             user = UserController.get_single_user(user_id=user_id)
             if user != None:
