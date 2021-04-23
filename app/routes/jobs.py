@@ -1,5 +1,7 @@
 from flask import Blueprint, request
 
+from app.database.models import Job
+from app.controllers.job_controller import JobController
 
 jobs_bp = Blueprint('jobs', __name__)
 

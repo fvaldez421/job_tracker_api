@@ -1,4 +1,5 @@
 from app.database.models import Vendor
+from app.database.models import User
 
 
 class VendorController:
@@ -16,16 +17,16 @@ class VendorController:
         return Vendor.objects(name__icontains=query_name.strip())
 
     @staticmethod
-    def create_vendor(vendor_data=None):
+    def create_vendor(vendor_data=None, user_id=None):
         vendor = None
         if 'name' in vendor_data:
             vendor_name = vendor_data['name'].strip()
             existing_vendor = Vendor.objects(name__iexact=vendor_name)
             if not existing_vendor:
                 vendor = Vendor(name=vendor_name)
-                vendor = vendor.save()
+                vendor = vendor.save() 
         return vendor
-
+        
     @staticmethod
     def update_vendor(vendor_id=None, updates=None):
         vendor = None

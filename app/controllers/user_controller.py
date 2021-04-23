@@ -19,7 +19,7 @@ class UserController:
             user = User(
                 name = user_data['name'].strip(),
                 email = user_data['email'].strip()
-            )
+                )
             user = user.save()
         return user
 
