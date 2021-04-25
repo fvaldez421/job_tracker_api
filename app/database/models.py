@@ -58,8 +58,7 @@ class Vendor(DocumentWithDateUser):
 
 
 class Job(DocumentWithDateUser):
-    # add user id
     name = db.StringField()
-    #address = db.StringField()
-    #number = db.IntegerField()
+    address = db.StringField()
+    number = db.IntField()
     #contract_amount = db.FloatField()
