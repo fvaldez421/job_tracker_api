@@ -5,6 +5,7 @@ from app.controllers.job_controller import JobController
 
 jobs_bp = Blueprint('jobs', __name__)
 
+
 @jobs_bp.route('/jobs', methods=['GET', 'POST', 'DELETE'])
 def index():
     if request.method == 'GET':
@@ -15,40 +16,48 @@ def index():
         else:
             jobs = JobController.get_all_jobs()
         return {
-            "jobs": jobs
+            'jobs': jobs
         }
 
     if request.method == 'POST':
         req_body = request.json
-        job = JobController.create_job(req_body)
+        res = JobController.create_job(req_body)
         return {
-            "job": job,
-            "success": job != None
+            'job': res.get('value'),
+            'success': res.get('success', False),
+            'message': res.get('message')
         }
 
+    # should protect with basic auth
     if request.method == 'DELETE':
         success = JobController.delete_all_jobs()
+        # hard coded -- not for use on prod
         return {
-            "success": success
+            'success': True
         }
 
 
 @jobs_bp.route('/jobs/<job_id>', methods=['GET', 'PUT', 'DELETE'])
 def job_by_id(job_id=None):
     if request.method == 'GET':
+        message = 'job not found'
+        job = JobController.find_by_id(job_by_id)
         return {
-            "jobs": Job.objects(pk=job_id)
+            'job': job,
+            'success': True if job else False,
+            'message': None if job else message
         }
     if request.method == 'PUT':
         req_body = request.json
-        job = JobController.update_vendor(job_id, req_body)
+        res = JobController.update_job(job_id, req_body)
         return {
-            "job": job,
-            "success": job != None
+            'job': res.get('value'),
+            'success': res.get('success', False),
+            'message': res.get('message')
         }
     if request.method == 'DELETE':
-        job = JobController.delete_job(job_id)
+        res = JobController.delete_job(job_id)
         return {
-            "job": job,
-            "success": job != None
+            'success': res.get('success', False),
+            'message': res.get('message')
         }

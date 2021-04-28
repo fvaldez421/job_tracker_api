@@ -1,7 +1,17 @@
 import datetime
+from enum import Enum
+
 from .db import db
 
 
+# enums
+class JobStatus(Enum):
+    DRAFT = 'draft'
+    IN_PROGRESS = 'in_progress'
+    ARCHIVED = 'archived'
+
+
+# utility models
 class DocumentWithDate(db.Document):
     meta = {"allow_inheritance": True}
     creation_date = db.DateTimeField()
@@ -48,6 +58,7 @@ class DocumentWithDateUser(DocumentWithDate, DocumentWithUser):
         return super(db.Document, self).save(*args, **kwargs)
 
 
+# models
 class User(DocumentWithDate):
     name = db.StringField()
     email = db.EmailField()
@@ -61,4 +72,8 @@ class Job(DocumentWithDateUser):
     name = db.StringField()
     address = db.StringField()
     number = db.IntField()
-    #contract_amount = db.FloatField()
+    gen_con = db.StringField()
+    progress = db.IntField(default=0)
+    status = db.StringField(default=JobStatus.DRAFT)
+    description = db.StringField()
+    notes = db.StringField()
