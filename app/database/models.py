@@ -68,12 +68,25 @@ class Vendor(DocumentWithDateUser):
     name = db.StringField()
 
 
+# keep aligned with Job update fields (helpers/job_helpers)
 class Job(DocumentWithDateUser):
     name = db.StringField()
     address = db.StringField()
     number = db.IntField()
     gen_con = db.StringField()
     progress = db.IntField(default=0)
-    status = db.StringField(default=JobStatus.DRAFT)
     description = db.StringField()
     notes = db.StringField()
+    _status = db.StringField(default=JobStatus.DRAFT.value)
+
+    @property
+    def status(self):
+        return self._status
+
+    @status.setter
+    def status(self, next_status):
+        if next_status == JobStatus.DRAFT.value \
+            or next_status == JobStatus.IN_PROGRESS.value \
+                or next_status == JobStatus.ARCHIVED.value:
+            self._status = next_status
+
