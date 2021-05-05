@@ -21,6 +21,11 @@ class JobController:
         job_name = job_data.get('name', '').strip()
         job_address = job_data.get('address', '').strip()
         job_number = job_data.get('number', '').strip()
+        gen_con = job_data.get('gen_con', '').strip()
+        progress = job_data.get('progress', '')
+        status = job_data.get('status', '')
+        descrip = job_data.get('description', '')
+        notes = job_data.get('notes', '')
         mod_id = job_data.get('mod_id')
 
         if job_name and job_address and job_number:
@@ -52,6 +57,11 @@ class JobController:
             job_name = updates.get('name', '').strip()
             job_address = updates.get('address', '').strip()
             job_number = updates.get('number', '').strip()
+            gen_con = updates.get('gen_con', '').strip()
+            progress = updates.get('progress', '')
+            status = updates.get('status', '').strip()
+            descrip = updates.get('description', '')
+            notes = updates.get('notes', '')
             if job_name or job_address or job_number:
                 job = JobController.find_by_id(job_id=job_id)
                 if not Job:
@@ -63,6 +73,16 @@ class JobController:
                         job.address = job_address
                     if job_number:
                         job.number = job_number
+                    if gen_con:
+                        gen.con = gen_con
+                    if progress:
+                        progress = progress
+                    if status:
+                        status = status
+                    if descrip:
+                        descrip = descrip
+                    if notes:
+                        notes = notes
                     if mod_id:
                         job.modified_by = mod_id
                     job.save()
