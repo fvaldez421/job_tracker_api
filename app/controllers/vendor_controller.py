@@ -12,7 +12,7 @@ class VendorController:
         return vendor
 
     @staticmethod
-    def find_by_name(query_name):
+    def find_by_name(query_name, specialValue=None):
         return Vendor.objects(name__icontains=query_name.strip())
 
     @staticmethod
@@ -20,9 +20,13 @@ class VendorController:
         vendor = None
         if 'name' in vendor_data:
             vendor_name = vendor_data['name'].strip()
+            mod_id = vendor_data.get('mod_id')
             existing_vendor = Vendor.objects(name__iexact=vendor_name)
             if not existing_vendor:
-                vendor = Vendor(name=vendor_name)
+                vendor = Vendor(
+                    name=vendor_name,
+                    created_by=mod_id
+                )
                 vendor = vendor.save()
         return vendor
 
@@ -31,10 +35,15 @@ class VendorController:
         vendor = None
         success = False
         if vendor_id != None or updates != None:
-            vendor = VendorController.find_by_id(vendor_id=vendor_id)
-            if vendor != None:
-                if 'name' in updates:
-                    vendor.name = updates['name'].strip()
+            mod_id = updates.get('mod_id')
+            vendor_name = updates.get('name')
+            if vendor_name or mod_id:
+                vendor = VendorController.find_by_id(vendor_id=vendor_id)
+                if vendor != None:
+                    if vendor_name:
+                        vendor.name = vendor_name.strip()
+                    if mod_id:
+                        vendor.modified_by = mod_id
                     vendor.save()
                     success = True
         return vendor if success else None
