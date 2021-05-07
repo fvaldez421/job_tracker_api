@@ -5,6 +5,7 @@ from flask import Flask, request
 from app.database.db import initialize_db
 from app.routes.users import users_bp
 from app.routes.jobs import jobs_bp
+from app.routes.vendors import vendors_bp
 
 # this will generate a path to this file (<os abs path>/job_tracker_api/app), we use replace to get the project root
 # HACK! we should clean this up ^^^^
@@ -28,6 +29,7 @@ def create_app():
     # register app routes
     app.register_blueprint(users_bp)
     app.register_blueprint(jobs_bp)
+    app.register_blueprint(vendors_bp)
 
     # a simple page that says hello
     @app.route('/')
