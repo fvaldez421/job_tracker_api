@@ -67,6 +67,8 @@ class User(DocumentWithDate):
 class Vendor(DocumentWithDateUser):
     name = db.StringField()
 
+class GeneralContractor(DocumentWithDateUser):
+    name = db.StringField()
 
 # keep aligned with Job update fields (helpers/job_helpers)
 class Job(DocumentWithDateUser):
@@ -90,3 +92,7 @@ class Job(DocumentWithDateUser):
                 or next_status == JobStatus.ARCHIVED.value:
             self._status = next_status
 
+#class Payroll(DocumentWithDateUser):
+    #name = db.StringField()
+    #hours = db.IntField()
+    #rate = db.FloatField()
