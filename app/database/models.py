@@ -63,6 +63,14 @@ class User(DocumentWithDate):
     name = db.StringField()
     email = db.EmailField()
 
+class Building(DocumentWithDateUser):
+    name = db.StringField()
+    number = db.IntField()
+    progress = db.IntField(default=0)
+    calendar = db.StringField()
+
+class Delivery(DocumentWithDateUser):
+    date = db.StringField()
 
 class Vendor(DocumentWithDateUser):
     name = db.StringField()
@@ -91,8 +99,3 @@ class Job(DocumentWithDateUser):
             or next_status == JobStatus.IN_PROGRESS.value \
                 or next_status == JobStatus.ARCHIVED.value:
             self._status = next_status
-
-#class Payroll(DocumentWithDateUser):
-    #name = db.StringField()
-    #hours = db.IntField()
-    #rate = db.FloatField()

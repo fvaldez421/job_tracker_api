@@ -7,6 +7,8 @@ from app.routes.users import users_bp
 from app.routes.jobs import jobs_bp
 from app.routes.vendors import vendors_bp
 from app.routes.generalcontractors import generalcontractors_bp
+from app.routes.buildings import buildings_bp
+from app.routes.deliveries import deliveries_bp
 
 # this will generate a path to this file (<os abs path>/job_tracker_api/app), we use replace to get the project root
 # HACK! we should clean this up ^^^^
@@ -32,6 +34,8 @@ def create_app():
     app.register_blueprint(jobs_bp)
     app.register_blueprint(vendors_bp)
     app.register_blueprint(generalcontractors_bp)
+    app.register_blueprint(buildings_bp)
+    app.register_blueprint(deliveries_bp)
 
     # a simple page that says hellos
     @app.route('/')
