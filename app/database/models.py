@@ -11,6 +11,13 @@ class JobStatus(Enum):
     ARCHIVED = 'archived'
 
 
+class MaterialType(Enum):
+    LUMBER = 'lumber'
+    CONCRETE = 'concrete'
+    SIDING = 'siding'
+    REBAR = 'rebar'
+
+
 # utility models
 class DocumentWithDate(db.Document):
     meta = {"allow_inheritance": True}
@@ -63,14 +70,29 @@ class User(DocumentWithDate):
     name = db.StringField()
     email = db.EmailField()
 
+
 class Building(DocumentWithDateUser):
     name = db.StringField()
     number = db.IntField()
     progress = db.IntField(default=0)
     calendar = db.StringField()
 
+
 class Delivery(DocumentWithDateUser):
-    date = db.StringField()
+    date = db.DateTimeField()
+    job = db.StringField()
+    vendor = db.StringField()
+    _material_type = db.StringField(required=True)
+    @property
+    def material_type(self):
+        return self._material_type
+    @material_type.setter
+    def material_type(self, next_material):
+        if next_material == MaterialType.LUMBER.value \
+            or next_material == MaterialType.CONCRETE.value \
+                or next_material == MaterialType.SIDING.value \
+                    or next_material == MaterialType.REBAR.value:
+            self._material_type = next_material
 
 class Vendor(DocumentWithDateUser):
     name = db.StringField()
