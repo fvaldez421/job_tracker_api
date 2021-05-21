@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 from flask import Flask, request
-# from flask_mongoengine import MongoEngine
+
 from app.database.db import initialize_db
 from app.routes.users import users_bp
 from app.routes.jobs import jobs_bp

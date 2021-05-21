@@ -1,5 +1,6 @@
 from app.database.models import Delivery, MaterialType
 from app.helpers.controller_helpers import ControllerHelpers
+from app.helpers.date_helpers import DateHelpers
 
 # keep aligned with Delivery db model (database/models)
 delivery_create_fields = [
@@ -36,25 +37,22 @@ class DeliveryController:
         valid_data = ControllerHelpers.checkForAllUpdates(delivery_create_fields, delivery_data)
 
         if valid_data:
-            date = delivery_data.get('date', '').strip()
+            date = DateHelpers.convert_from_ms(delivery_data.get('date'))
             job = delivery_data.get('job', '').strip()
             vendor = delivery_data.get('vendor', '').strip()
             material_type = delivery_data.get('material_type', '').strip()
             mod_id = delivery_data.get('mod_id')
-            existing_delivery = Delivery.objects(delivery__exact=delivery)
+            existing_delivery = Delivery.objects(date=date, job=job, _material_type=material_type)
             if existing_delivery:
-                message = 'a delivery with the date "{}" already exists'.format(delivery)
+                message = 'a delivery with the date, job, and material type "{}", "{}", "{}" already exists'.format(date, job, material_type)
             else:
                 delivery = Delivery(
                     date=date,
                     job=job,
-                    vendor=vendor,
-                    material_type=material_type
+                    vendor=vendor
                 )
                 if material_type:
                     delivery.material_type = material_type
-                if date:
-                    delivery.date = date
                 delivery = delivery.save()
                 message = 'successfully created delivery'
         return {
@@ -71,7 +69,7 @@ class DeliveryController:
         has_updates = ControllerHelpers.checkForAnyUpdates(delivery_update_fields, updates)
         if delivery_id != None and has_updates:
             mod_id = updates.get('mod_id')
-            date = updates.get('date', '').strip()
+            date = DateHelpers.convert_from_ms(updates.get('date'))
             job = updates.get('job', '').strip()
             vendor = updates.get('vendor', '').strip()
             material_type = updates.get('material_type', '').strip()

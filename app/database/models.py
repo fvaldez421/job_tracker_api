@@ -22,7 +22,7 @@ class MaterialType(Enum):
 class DocumentWithDate(db.Document):
     meta = {"allow_inheritance": True}
     creation_date = db.DateTimeField()
-    modified_date = db.DateTimeField(default=datetime.datetime.now)
+    modified_date = db.DateTimeField(default=datetime.datetime.now())
 
     def set_date(self, *args, **kwargs):
         if not self.creation_date:
@@ -95,11 +95,14 @@ class Delivery(DocumentWithDateUser):
                     or next_material == MaterialType.REBAR.value:
             self._material_type = next_material
 
+
 class Vendor(DocumentWithDateUser):
     name = db.StringField()
 
+
 class GeneralContractor(DocumentWithDateUser):
     name = db.StringField()
+
 
 # keep aligned with Job update fields (helpers/job_helpers)
 class Job(DocumentWithDateUser):
