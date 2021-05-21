@@ -1,5 +1,19 @@
-from app.database.models import Delivery
+from app.database.models import Delivery, MaterialType
+from app.helpers.controller_helpers import ControllerHelpers
 
+# keep aligned with Delivery db model (database/models)
+delivery_create_fields = [
+    'date',
+    'job',
+    'vendor',
+    'material_type'
+]
+delivery_update_fields = [
+    'date',
+    'job',
+    'vendor',
+    'material_type'
+]
 
 class DeliveryController:
     @staticmethod
@@ -12,60 +26,95 @@ class DeliveryController:
         return delivery
 
     @staticmethod
-    def find_by_name(query_name, specialValue=None):
-        return Delivery.objects(name__icontains=query_name.strip())
+    def find_by_date(query_delivery, specialValue=None):
+        return Delivery.objects(delivery__contains=query_delivery.strip())
 
     @staticmethod
     def create_delivery(delivery_data=None):
         delivery = None
-        if 'date' in delivery_data and 'job' in delivery_data and \
-            'vendor' in delivery_data and 'material_type' in delivery_data:
+        message = '"date", "job", and "vendor" fields are all required'
+        valid_data = ControllerHelpers.checkForAllUpdates(delivery_create_fields, delivery_data)
+
+        if valid_data:
+            date = delivery_data.get('date', '').strip()
+            job = delivery_data.get('job', '').strip()
+            vendor = delivery_data.get('vendor', '').strip()
+            material_type = delivery_data.get('material_type', '').strip()
             mod_id = delivery_data.get('mod_id')
-            delivery_date = delivery_data['date'].strip()
-            job = delivery_data.get('job')
-            vendor = delivery_data.get('vendor')
-            material_type = delivery_data.get('material_type')
-            existing_delivery = Delivery.objects(date__exact=delivery_date, job__exact=job, _material_type__exact=material_type)
-            if not existing_delivery:
+            existing_delivery = Delivery.objects(delivery__exact=delivery)
+            if existing_delivery:
+                message = 'a delivery with the date "{}" already exists'.format(delivery)
+            else:
                 delivery = Delivery(
-                    date=delivery_date,
+                    date=date,
                     job=job,
                     vendor=vendor,
-                    material_type=material_type,
-                    created_by=mod_id
+                    material_type=material_type
                 )
+                if material_type:
+                    delivery.material_type = material_type
+                if date:
+                    delivery.date = date
                 delivery = delivery.save()
-        return delivery
+                message = 'successfully created delivery'
+        return {
+            'value': delivery,
+            'success': True if delivery else False,
+            'message': message
+        }
 
     @staticmethod
     def update_delivery(delivery_id=None, updates=None):
         delivery = None
+        message = 'can not update delivery with empty request body'
         success = False
-        if delivery_id != None or updates != None:
+        has_updates = ControllerHelpers.checkForAnyUpdates(delivery_update_fields, updates)
+        if delivery_id != None and has_updates:
             mod_id = updates.get('mod_id')
-            delivery_name = updates.get('name')
-            if delivery_name or mod_id:
-                delivery = DeliveryController.find_by_id(delivery_id=delivery_id)
-                if delivery != None:
-                    if delivery_name:
-                        delivery.name = delivery_name.strip()
-                    if mod_id:
-                        delivery.modified_by = mod_id
-                    delivery.save()
-                    success = True
-        return delivery if success else None
+            date = updates.get('date', '').strip()
+            job = updates.get('job', '').strip()
+            vendor = updates.get('vendor', '').strip()
+            material_type = updates.get('material_type', '').strip()
+
+            delivery = DeliveryController.find_by_id(delivery_id=delivery_id)
+            if not Delivery:
+                message = 'delivery with id "{}" not found'.format(delivery_id)
+            else:
+                if date:
+                    delivery.date = date
+                if job:
+                    delivery.job = job
+                if vendor:
+                    delivery.vendor = vendor
+                if material_type:
+                    delivery.material_type = material_type
+                if mod_id:
+                    delivery.modified_by = mod_id
+                delivery.save()
+                success = True
+                message = 'successfully updated delivery'
+        return {
+            'value': delivery,
+            'success': success,
+            'message': message
+        }
 
     @staticmethod
     def delete_delivery(delivery_id=None):
         delivery = None
         success = False
+        message = 'delivery with id "{}" not found'.format(delivery_id)
         if delivery_id != None:
             delivery = DeliveryController.find_by_id(delivery_id=delivery_id)
             if delivery != None:
                 delivery.delete()
                 success = True
-        return success
+                message = 'successfully deleted delivery'
+        return {
+            'success': success,
+            'message': message
+        }
 
     @staticmethod
-    def delete_all_deliverys():
+    def delete_all_deliveries():
         Delivery.drop_collection()

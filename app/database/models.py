@@ -74,6 +74,7 @@ class User(DocumentWithDate):
 class Building(DocumentWithDateUser):
     name = db.StringField()
     number = db.IntField()
+    job = db.StringField()
     progress = db.IntField(default=0)
     calendar = db.StringField()
 
