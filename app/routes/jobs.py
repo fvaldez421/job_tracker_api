@@ -1,12 +1,13 @@
 from flask import Blueprint, request
+from flask_cors import cross_origin
 
-from app.database.models import Job
 from app.controllers.job_controller import JobController
 
 jobs_bp = Blueprint('jobs', __name__)
 
 
 @jobs_bp.route('/jobs', methods=['GET', 'POST', 'DELETE'])
+@cross_origin()
 def index():
     if request.method == 'GET':
         text_query = request.args.get('q', None)
