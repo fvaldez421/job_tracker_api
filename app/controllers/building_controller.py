@@ -6,10 +6,12 @@ from app.helpers.date_helpers import DateHelpers
 building_create_fields = [
     'name',
     'job',
+    'progress'
 ]
 building_update_fields = [
     'name',
     'job',
+    'progress'
 ]
 
 class BuildingController:
@@ -36,6 +38,7 @@ class BuildingController:
             building_name = building_data['name'].strip()
             job = building_data.get('job')
             mod_id = building_data.get('mod_id')
+            progress = building_data.get('progress')
             existing_building = Building.objects(name__iexact=building_name)
             if existing_building:
                 message = 'a building with that name and job "{}", "{}" already exists.'.format(building_name, job)
@@ -43,6 +46,7 @@ class BuildingController:
                 building = Building(
                     name=building_name,
                     job=job,
+                    progress=progress,
                     created_by=mod_id
                 )
                 building = building.save()
@@ -56,29 +60,32 @@ class BuildingController:
     @staticmethod
     def update_building(building_id=None, updates=None):
         building = None
-        message = 'can not update buidling with empty request body'
+        message = 'can not update building with empty request body'
         success = False
         has_updates = ControllerHelpers.checkForAnyUpdates(building_update_fields, updates)
+        print(has_updates)
         if building_id != None and has_updates != None:
             mod_id = updates.get('mod_id')
-            job = building.get('job')
+            job = updates.get('job')
             building_name = updates.get('name')
-            if building_name or mod_id:
-                building = BuildingController.find_by_id(building_id=building_id)
-                if building != None:
-                    message = 'building with id "{}" not found'
-                else:
-                    if building_name:
-                        building.name = building_name.strip()
-                    if job:
-                        buidling.job = building_job.strip()
-                    if mod_id:
-                        building.modified_by = mod_id
-                    building.save()
-                    success = True
-                    message = 'successfully updated building'
+            progress = updates.get('progress')
+            building = BuildingController.find_by_id(building_id=building_id)
+            if building == None:
+                message = 'building with id "{}" not found'
+            else:
+                if building_name:
+                    building.name = building_name.strip()
+                if job:
+                    buidling.job = building_job.strip()
+                if mod_id:
+                    building.modified_by = mod_id
+                if progress:
+                    building.progress = progress
+                building.save()
+                success = True
+                message = 'successfully updated building'
         return {
-            'value': buidling,
+            'value': building,
             'success': success,
             'message': message
         }

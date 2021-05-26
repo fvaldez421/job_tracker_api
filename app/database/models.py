@@ -76,7 +76,6 @@ class Building(DocumentWithDateUser):
     number = db.IntField()
     job = db.StringField()
     progress = db.IntField(default=0)
-    calendar = db.StringField()
 
 
 class Delivery(DocumentWithDateUser):

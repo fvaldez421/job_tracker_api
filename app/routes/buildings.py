@@ -21,10 +21,11 @@ def index():
 
     if request.method == 'POST':
         req_body = request.json
-        building = BuildingController.create_building(req_body)
+        res = BuildingController.create_building(req_body)
         return {
-            "building": building,
-            "success": building != None
+            'building': res.get('value'),
+            'success': res.get('success', False),
+            'message': res.get('message')
         }
 
     if request.method == 'DELETE':
@@ -37,19 +38,25 @@ def index():
 @buildings_bp.route('/buildings/<building_id>', methods=['GET', 'PUT', 'DELETE'])
 def building_by_id(building_id=None):
     if request.method == 'GET':
+        message = 'building not found'
+        building = BuildingController.find_by_id(building_id)
         return {
-            "buildings": Building.objects(pk=building_id)
+            'building': building,
+            'success': True if building else False,
+            'message': None if building else message
         }
     if request.method == 'PUT':
         req_body = request.json
-        building = BuildingController.update_building(building_id, req_body)
+        res = BuildingController.update_building(building_id, req_body)
         return {
-            "building": building,
-            "success": building != None
+            'building': res.get('value'),
+            'success': res.get('success', False),
+            'message': res.get('message')
         }
     if request.method == 'DELETE':
-        building = BuildingController.delete_building(building_id)
+        res = BuildingController.delete_building(building_id)
         return {
-            "building": building,
-            "success": building != None
+            'success': res.get('success', False),
+            'message': res.get('message')
         }
+
