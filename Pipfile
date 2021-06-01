@@ -8,6 +8,7 @@ flask = "*"
 flask-mongoengine = "*"
 blueprint = "*"
 python-dotenv = "*"
+flask-cors = "*"
 
 [dev-packages]
 
