@@ -23,8 +23,10 @@ class DeliveryController:
 
     @staticmethod
     def find_by_id(delivery_id=None):
-        delivery = Delivery.objects.get(pk=delivery_id)
-        return delivery
+        deliveries = Delivery.objects(pk=delivery_id)
+        if len(deliveries) > 0:
+            return deliveries[0]
+        return None
 
     @staticmethod
     def find_by_date(query_delivery, specialValue=None):

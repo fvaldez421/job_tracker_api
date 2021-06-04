@@ -67,8 +67,11 @@ class DocumentWithDateUser(DocumentWithDate, DocumentWithUser):
 
 # models
 class User(DocumentWithDate):
+    # creation_date
+    # updated_date
     name = db.StringField()
     email = db.EmailField()
+
 
 
 class Building(DocumentWithDateUser):

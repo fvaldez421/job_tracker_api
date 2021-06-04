@@ -21,9 +21,11 @@ class BuildingController:
 
     @staticmethod
     def find_by_id(building_id=None):
-        building = Building.objects.get(pk=building_id)
-        return building
-
+        buildings = Building.objects(pk=building_id)
+        if len(buildings) > 0:
+            return buildings[0]
+        return None
+        
     @staticmethod
     def find_by_name(query_name, specialValue=None):
         return Building.objects(name__icontains=query_name.strip())
@@ -71,12 +73,12 @@ class BuildingController:
             progress = updates.get('progress')
             building = BuildingController.find_by_id(building_id=building_id)
             if building == None:
-                message = 'building with id "{}" not found'
+                message = 'building with id "{}" not found'.format(building_id)
             else:
                 if building_name:
                     building.name = building_name.strip()
                 if job:
-                    buidling.job = building_job.strip()
+                    building.job = job.strip()
                 if mod_id:
                     building.modified_by = mod_id
                 if progress:

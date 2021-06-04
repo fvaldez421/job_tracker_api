@@ -3,12 +3,10 @@ from app.helpers.controller_helpers import ControllerHelpers
 from app.helpers.date_helpers import DateHelpers
 
 vendor_create_fields = [
-    'name',
-    'job'
+    'name'
 ]
 vendor_update_fields = [
-    'name',
-    'job'
+    'name'
 ]
 
 class VendorController:
@@ -18,8 +16,10 @@ class VendorController:
 
     @staticmethod
     def find_by_id(vendor_id=None):
-        vendor = Vendor.objects.get(pk=vendor_id)
-        return vendor
+        vendors = Vendor.objects(pk=vendor_id)
+        if len(vendors) > 0:
+            return vendors[0]
+        return None
 
     @staticmethod
     def find_by_name(query_name, specialValue=None):
@@ -33,7 +33,6 @@ class VendorController:
 
         if valid_data:
             vendor_name = vendor_data['name'].strip()
-            job = vendor_data.get('job')
             mod_id = vendor_data.get('mod_id')
             existing_vendor = Vendor.objects(name__iexact=vendor_name)
             if existing_vendor:
@@ -41,7 +40,6 @@ class VendorController:
             else:
                 vendor = Vendor(
                     name=vendor_name,
-                    job=job,
                     created_by=mod_id
                 )
                 vendor = vendor.save()
@@ -58,10 +56,8 @@ class VendorController:
         message = 'can not update vendor with empty request body'
         success = False
         has_updates = ControllerHelpers.checkForAnyUpdates(vendor_update_fields, updates)
-        print(has_updates)
         if vendor_id != None and has_updates != None:
             mod_id = updates.get('mod_id')
-            job = updates.get('job')
             vendor_name = updates.get('name')
             vendor = VendorController.find_by_id(vendor_id=vendor_id)
             if vendor == None:
@@ -69,8 +65,6 @@ class VendorController:
             else:
                 if vendor_name:
                     vendor.name = vendor_name.strip()
-                if job:
-                    buidling.job = vendor_job.strip()
                 if mod_id:
                     vendor.modified_by = mod_id
                 

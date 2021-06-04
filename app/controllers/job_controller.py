@@ -25,8 +25,10 @@ class JobController:
 
     @staticmethod
     def find_by_id(job_id=None):
-        job = Job.objects.get(pk=job_id)
-        return job
+        jobs = Job.objects(pk=job_id)
+        if len(jobs) > 0:
+            return jobs[0]
+        return None
 
     @staticmethod
     def find_by_name(query_name, specialValue=None):

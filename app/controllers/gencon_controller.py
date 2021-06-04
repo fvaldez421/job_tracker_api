@@ -16,8 +16,11 @@ class GeneralContractorController:
 
     @staticmethod
     def find_by_id(generalcontractor_id=None):
-        generalcontractor = GeneralContractor.objects.get(pk=generalcontractor_id)
-        return generalcontractor
+        generalcontractors = GeneralContractor.objects(pk=generalcontractor_id)
+        if len(generalcontractors) > 0:
+            return generalcontractors[0]
+        return None
+        
 
     @staticmethod
     def find_by_name(query_name, specialValue=None):
