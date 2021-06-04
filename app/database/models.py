@@ -120,7 +120,7 @@ class Job(DocumentWithDateUser):
     @property
     def status(self):
         return self._status
-
+ 
     @status.setter
     def status(self, next_status):
         if next_status == JobStatus.DRAFT.value \
