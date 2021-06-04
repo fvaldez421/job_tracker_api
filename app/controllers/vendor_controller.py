@@ -36,7 +36,7 @@ class VendorController:
             mod_id = vendor_data.get('mod_id')
             existing_vendor = Vendor.objects(name__iexact=vendor_name)
             if existing_vendor:
-                message = 'a vendor with that name and job "{}", "{}" already exists.'.format(vendor_name, job)
+                message = 'a vendor with that name "{}" already exists.'.format(vendor_name)
             else:
                 vendor = Vendor(
                     name=vendor_name,
